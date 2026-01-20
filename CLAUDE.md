@@ -5,61 +5,77 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Build Commands
 
 ```bash
-# Build the project
-./gradlew build
+# Build Android app
+./gradlew :app:assembleDebug
 
 # Clean build
-./gradlew clean build
+./gradlew clean :app:assembleDebug
 
-# Assemble debug APK
-./gradlew assembleDebug
+# Install Android app on connected device
+./gradlew :app:installDebug
 
-# Assemble release APK
-./gradlew assembleRelease
+# Build iOS framework
+./gradlew :app:iosSimulatorArm64Binaries
 
-# Install debug APK on connected device
-./gradlew installDebug
+# Build release APK
+./gradlew :app:assembleRelease
 ```
 
 ## Testing Commands
 
 ```bash
-# Run all unit tests
+# Run all tests
 ./gradlew test
 
-# Run unit tests for debug build
-./gradlew testDebugUnitTest
-
-# Run a single test class
-./gradlew testDebugUnitTest --tests "com.example.flosy.ExampleUnitTest"
-
-# Run instrumented tests (requires connected device/emulator)
-./gradlew connectedAndroidTest
-
-# Run instrumented tests for debug build
-./gradlew connectedDebugAndroidTest
+# Run common tests
+./gradlew :app:testDebugUnitTest
 ```
 
 ## Architecture
 
-This is a single-module Android application using Jetpack Compose for UI.
+This is a **Compose Multiplatform (CMP)** project sharing UI and business logic across Android and iOS.
 
 - **Package**: `com.flosy.app`
-- **Min SDK**: 24
-- **Target SDK**: 36
+- **Min SDK**: 24 (Android)
+- **Target SDK**: 35 (Android)
 - **Build System**: Gradle with Kotlin DSL and version catalog (`gradle/libs.versions.toml`)
 
-### Source Structure
+### Project Structure
 
-- `app/src/main/java/com/flosy/app/` - Main application code
-  - `MainActivity.kt` - Single activity entry point using Compose
-  - `ui/theme/` - Material3 theme configuration (Color, Theme, Type)
-- `app/src/test/` - Local unit tests (JUnit 4)
-- `app/src/androidTest/` - Instrumented tests (AndroidJUnit4)
+```
+Flosy/
+├── app/                    # Shared Compose UI + business logic
+│   └── src/
+│       ├── commonMain/            # Shared code (UI + logic)
+│       │   └── kotlin/com/flosy/app/
+│       │       ├── App.kt         # Main composable entry point
+│       │       ├── Platform.kt    # Platform expect declaration
+│       │       └── ui/theme/      # Material3 theme (Color, Theme, Type)
+│       ├── androidMain/           # Android-specific code
+│       │   └── kotlin/com/flosy/app/
+│       │       ├── MainActivity.kt
+│       │       └── Platform.android.kt
+│       └── iosMain/               # iOS-specific code
+│           └── kotlin/com/flosy/app/
+│               ├── MainViewController.kt
+│               └── Platform.ios.kt
+└── iosApp/                        # iOS app wrapper (Swift)
+    └── iosApp/
+        ├── iOSApp.swift           # iOS entry point
+        └── ContentView.swift      # Hosts ComposeView
+```
 
 ### Tech Stack
 
 - Kotlin 2.0.21
-- Jetpack Compose with Material3
-- AndroidX Activity Compose for activity integration
-- Compose BOM for version alignment
+- Compose Multiplatform 1.7.1
+- Material3 Design
+- Kotlin Coroutines
+- Kotlin Serialization
+- Navigation Compose (Multiplatform)
+
+### Adding New Screens
+
+1. Create composables in `app/src/commonMain/kotlin/com/flosy/app/`
+2. Platform-specific code goes in `androidMain` or `iosMain` with `expect`/`actual`
+3. The `App()` composable in `App.kt` is the root of the UI tree
