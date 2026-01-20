@@ -1,4 +1,4 @@
-package com.example.flosy
+package com.flosy.app
 
 import org.junit.Test
 

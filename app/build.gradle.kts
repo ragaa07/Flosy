@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.flosy"
+    namespace = "com.flosy.app"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.example.flosy"
+        applicationId = "com.flosy.app"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

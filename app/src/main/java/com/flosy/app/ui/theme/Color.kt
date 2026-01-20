@@ -1,4 +1,4 @@
-package com.example.flosy.ui.theme
+package com.flosy.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
