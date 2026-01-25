@@ -28,21 +28,43 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            // Core modules
+            implementation(project(":core:common"))
+
+            // Design System
+            implementation(project(":designSystem"))
+
+            // Feature modules
+            implementation(project(":features:home"))
+            implementation(project(":features:onboarding"))
+            implementation(project(":features:expenses"))
+            implementation(project(":features:profile"))
+            implementation(project(":features:settings"))
+
+            // Compose
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
+
+            // Kotlin libraries
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.navigation.compose)
+
+            // Koin
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
         }
 
         androidMain.dependencies {
             implementation(libs.androidx.core.ktx)
             implementation(libs.androidx.activity.compose)
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.koin.android)
         }
     }
 }

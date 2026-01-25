@@ -15,3 +15,6 @@
 .cxx
 local.properties
 .kotlin
+_bmad
+_bmad-output
+.claude
