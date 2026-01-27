@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -15,6 +16,9 @@ kotlin {
         }
     }
 
+    // XCFramework for iOS
+    val xcf = XCFramework("App")
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -23,13 +27,16 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "App"
             isStatic = true
+            xcf.add(this)
+            // Export all dependencies to iOS
+            export(project(":core:common"))
         }
     }
 
     sourceSets {
         commonMain.dependencies {
-            // Core modules
-            implementation(project(":core:common"))
+            // Core modules (api for iOS framework export)
+            api(project(":core:common"))
 
             // Design System
             implementation(project(":designSystem"))
